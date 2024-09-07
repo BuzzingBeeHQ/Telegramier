@@ -2,8 +2,8 @@
 
 public class TelegramBotApiHttpService(HttpClient httpClient)
 {
-    public async Task<string> GetDocumentationHtmlAsync(string url)
+    public async Task<string> GetDocumentationAsHtmlAsync(string telegramDocumentationUrl)
     {
-        return await httpClient.GetStringAsync(url);
+        return await httpClient.GetStringAsync(telegramDocumentationUrl);
     }
 }

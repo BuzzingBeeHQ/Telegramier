@@ -5,5 +5,5 @@ namespace Telegramier.Dto;
 public class ChatBackgroundDto
 {
     [JsonPropertyName("type")]
-    public BackgroundType Type { get; set; }
+    public BackgroundTypeDto Type { get; set; }
 }

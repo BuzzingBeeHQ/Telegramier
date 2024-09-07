@@ -20,10 +20,10 @@ public partial class CodeGenerationService(TelegramBotApiHttpService telegramBot
 
     public async Task GenerateTelegramBotApiDefinitionsAsync()
     {
-        string htmlDocumentation = await telegramBotApiHttpService.GetDocumentationHtmlAsync(options.Value.TelegramBotApiDocumentationUrl);
+        string html = await telegramBotApiHttpService.GetDocumentationAsHtmlAsync(options.Value.TelegramBotApiDocumentationUrl);
 
         var context = BrowsingContext.New(BrowsingConfiguration);
-        var htmlDocument = await context.OpenAsync(request => request.Content(htmlDocumentation));
+        var htmlDocument = await context.OpenAsync(request => request.Content(html));
 
         var devContentContainer = PreprocessDocumentationNodes(htmlDocument);
 

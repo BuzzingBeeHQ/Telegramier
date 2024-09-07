@@ -8,7 +8,7 @@ public class AnswerInlineQueryDto
     public string InlineQueryId { get; set; }
 
     [JsonPropertyName("results")]
-    public InlineQueryResult[] Results { get; set; }
+    public InlineQueryResultDto[] Results { get; set; }
 
     [JsonPropertyName("cache_time")]
     public int? CacheTime { get; set; }
