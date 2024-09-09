@@ -3,15 +3,12 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Telegramier.Bot.Client;
+namespace Telegramier.Bot.Client.Models;
 
 internal class TelegramBotRequestBuilder
 {
-    private const string BaseUrl = "https://api.telegram.org/bot";
-
     private readonly HttpMethod _httpMethod;
     private readonly string _methodName;
-
     private string? _botToken;
     private HttpContent? _httpContent;
 
@@ -23,15 +20,14 @@ internal class TelegramBotRequestBuilder
 
     internal TelegramBotRequestBuilder AddBotToken(string botToken)
     {
+        ArgumentException.ThrowIfNullOrEmpty(botToken);
         _botToken = botToken;
         return this;
     }
 
     internal TelegramBotRequestBuilder AddJsonContent(object body, JsonSerializerOptions? jsonSerializerOptions = null)
     {
-        jsonSerializerOptions ??= new JsonSerializerOptions();
-        jsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-
+        jsonSerializerOptions = ValidateJsonSerializerOptions(jsonSerializerOptions);
         _httpContent = JsonContent.Create(body, new MediaTypeHeaderValue("application/json"), jsonSerializerOptions);
         return this;
     }
@@ -43,18 +39,19 @@ internal class TelegramBotRequestBuilder
 
     internal HttpRequestMessage Build()
     {
-        ValidateRequestParametersOrThrow();
-
         return new HttpRequestMessage
         {
             Method = _httpMethod,
-            RequestUri = new Uri($"{BaseUrl}{_botToken}/{_methodName}", UriKind.Absolute),
+            RequestUri = new Uri($"{Constants.BaseApiUrl}{_botToken}/{_methodName}", UriKind.Absolute),
             Content = _httpContent
         };
     }
 
-    private void ValidateRequestParametersOrThrow()
+    private static JsonSerializerOptions ValidateJsonSerializerOptions(JsonSerializerOptions? jsonSerializerOptions)
     {
-        ArgumentException.ThrowIfNullOrEmpty(_botToken);
+        jsonSerializerOptions ??= new JsonSerializerOptions();
+        jsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+
+        return jsonSerializerOptions;
     }
 }

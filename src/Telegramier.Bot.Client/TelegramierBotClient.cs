@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Json;
 using System.Runtime.CompilerServices;
 using Telegramier.Bot.Client.Interfaces;
+using Telegramier.Bot.Client.Models;
 using Telegramier.Bot.Dto;
 
 namespace Telegramier.Bot.Client;
@@ -14,14 +15,14 @@ public class TelegramierBotClient(string botToken) : ITelegramierBotClient
         _httpClient = httpClient;
     }
 
-    public Task<ResponseDto<bool>> SetWebhookAsync(SetWebhookDto setWebhook)
+    public async Task<ResponseDto<bool>> SetWebhookAsync(SetWebhookDto setWebhook)
     {
-        return SendBaseAsync<bool>(setWebhook);
+        return await SendBaseAsync<bool>(setWebhook).ConfigureAwait(false);
     }
 
-    public Task<ResponseDto<MessageDto>> SendMessageAsync(SendMessageDto sendMessage)
+    public async Task<ResponseDto<MessageDto>> SendMessageAsync(SendMessageDto sendMessage)
     {
-        return SendBaseAsync<MessageDto>(sendMessage);
+        return await SendBaseAsync<MessageDto>(sendMessage).ConfigureAwait(false);
     }
 
     private async Task<ResponseDto<TResult>> SendBaseAsync<TResult>(object requestDto, [CallerMemberName] string methodName = "")
@@ -32,7 +33,6 @@ public class TelegramierBotClient(string botToken) : ITelegramierBotClient
             .Build();
 
         var response = await _httpClient.SendAsync(telegramRequest).ConfigureAwait(false);
-        var responseResult = await response.Content.ReadFromJsonAsync<ResponseDto<TResult>>().ConfigureAwait(false);
-        return responseResult!;
+        return (await response.Content.ReadFromJsonAsync<ResponseDto<TResult>>().ConfigureAwait(false))!;
     }
 }
