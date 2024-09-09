@@ -25,7 +25,7 @@ internal class TelegramBotRequestBuilder
         return this;
     }
 
-    internal TelegramBotRequestBuilder AddJsonContent(object body, JsonSerializerOptions? jsonSerializerOptions = null)
+    internal TelegramBotRequestBuilder AddJsonContent(object? body, JsonSerializerOptions? jsonSerializerOptions = null)
     {
         jsonSerializerOptions = ValidateJsonSerializerOptions(jsonSerializerOptions);
         _httpContent = JsonContent.Create(body, new MediaTypeHeaderValue("application/json"), jsonSerializerOptions);

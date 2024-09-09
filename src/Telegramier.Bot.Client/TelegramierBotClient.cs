@@ -15,9 +15,19 @@ public class TelegramierBotClient(string botToken) : ITelegramierBotClient
         _httpClient = httpClient;
     }
 
+    public async Task<ResponseDto<WebhookInfoDto>> GetWebhookInfoAsync()
+    {
+        return await SendBaseAsync<WebhookInfoDto>().ConfigureAwait(false);
+    }
+
     public async Task<ResponseDto<bool>> SetWebhookAsync(SetWebhookDto setWebhook)
     {
         return await SendBaseAsync<bool>(setWebhook).ConfigureAwait(false);
+    }
+
+    public async Task<ResponseDto<bool>> DeleteWebhookAsync(DeleteWebhookDto deleteWebhook)
+    {
+        return await SendBaseAsync<bool>(deleteWebhook).ConfigureAwait(false);
     }
 
     public async Task<ResponseDto<MessageDto>> SendMessageAsync(SendMessageDto sendMessage)
@@ -25,7 +35,7 @@ public class TelegramierBotClient(string botToken) : ITelegramierBotClient
         return await SendBaseAsync<MessageDto>(sendMessage).ConfigureAwait(false);
     }
 
-    private async Task<ResponseDto<TResult>> SendBaseAsync<TResult>(object requestDto, [CallerMemberName] string methodName = "")
+    private async Task<ResponseDto<TResult>> SendBaseAsync<TResult>(object? requestDto = null, [CallerMemberName] string methodName = "")
     {
         var telegramRequest = TelegramBotRequestBuilder.CreateNew(HttpMethod.Post, methodName.Replace("Async", string.Empty))
             .AddBotToken(botToken)
