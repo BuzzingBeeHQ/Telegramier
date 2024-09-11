@@ -32,7 +32,7 @@ internal class TelegramBotRequestBuilder
         return this;
     }
 
-    internal static TelegramBotRequestBuilder CreateNew(HttpMethod httpMethod, string methodName)
+    internal static TelegramBotRequestBuilder Create(HttpMethod httpMethod, string methodName)
     {
         return new TelegramBotRequestBuilder(httpMethod, methodName);
     }

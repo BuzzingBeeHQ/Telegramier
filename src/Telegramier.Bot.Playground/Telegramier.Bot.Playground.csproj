@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Telegramier.Extensions\Telegramier.Extensions.csproj" />
+        <ProjectReference Include="..\Telegramier.Extensions\Telegramier.Extensions.csproj" />
     </ItemGroup>
 
 </Project>

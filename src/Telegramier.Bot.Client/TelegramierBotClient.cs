@@ -37,12 +37,13 @@ public class TelegramierBotClient(string botToken) : ITelegramierBotClient
 
     private async Task<ResponseDto<TResult>> SendBaseAsync<TResult>(object? requestDto = null, [CallerMemberName] string methodName = "")
     {
-        var telegramRequest = TelegramBotRequestBuilder.CreateNew(HttpMethod.Post, methodName.Replace("Async", string.Empty))
+        var telegramRequest = TelegramBotRequestBuilder.Create(HttpMethod.Post, methodName.Replace("Async", string.Empty))
             .AddBotToken(botToken)
             .AddJsonContent(requestDto)
             .Build();
 
         var response = await _httpClient.SendAsync(telegramRequest).ConfigureAwait(false);
-        return (await response.Content.ReadFromJsonAsync<ResponseDto<TResult>>().ConfigureAwait(false))!;
+        var responseResult = await response.Content.ReadFromJsonAsync<ResponseDto<TResult>>().ConfigureAwait(false);
+        return responseResult ?? throw new InvalidOperationException("The response content was null or invalid.");
     }
 }
