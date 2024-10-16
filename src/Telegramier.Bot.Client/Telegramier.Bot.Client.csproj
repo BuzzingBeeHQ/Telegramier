@@ -7,6 +7,14 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <PropertyGroup>
+        <PackageId>Telegramier.Bot.Client</PackageId>
+        <Version>1.0.0</Version>
+        <Authors>Kombushi</Authors>
+        <Company>BuzzingBeeHQ</Company>
+        <OutputPath>../packages</OutputPath>
+    </PropertyGroup>
+
     <ItemGroup>
       <ProjectReference Include="..\Telegramier.Bot.Dto\Telegramier.Bot.Dto.csproj" />
     </ItemGroup>
