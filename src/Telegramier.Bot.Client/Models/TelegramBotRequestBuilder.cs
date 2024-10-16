@@ -20,7 +20,11 @@ internal class TelegramBotRequestBuilder
 
     internal TelegramBotRequestBuilder AddBotToken(string botToken)
     {
-        ArgumentException.ThrowIfNullOrEmpty(botToken);
+        if (string.IsNullOrEmpty(botToken))
+        {
+            throw new ArgumentException("Telegram bot token cannot be null or empty.", nameof(botToken));
+        }
+
         _botToken = botToken;
         return this;
     }

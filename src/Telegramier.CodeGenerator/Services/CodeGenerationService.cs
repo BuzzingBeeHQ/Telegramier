@@ -9,8 +9,9 @@ using Telegramier.CodeGenerator.Settings;
 
 namespace Telegramier.CodeGenerator.Services;
 
-public partial class CodeGenerationService(TelegramBotApiHttpService telegramBotApiHttpService, LlmClientService llmClientService, IOptions<ApplicationSettings> options)
+public class CodeGenerationService(TelegramBotApiHttpService telegramBotApiHttpService, LlmClientService llmClientService, IOptions<ApplicationSettings> options)
 {
+    private static readonly Regex ClassNameRegex = new(@"class\s+(\w+)", RegexOptions.Compiled);
     private static readonly IConfiguration BrowsingConfiguration = Configuration.Default;
     private static readonly ProgressBarOptions ProgressBarOptions = new()
     {
@@ -69,14 +70,14 @@ public partial class CodeGenerationService(TelegramBotApiHttpService telegramBot
         dtoFileContent = dtoFileContent.Replace("```", string.Empty);
 
         string fileNameWithoutExtension = Guid.NewGuid().ToString();
-        Match classNameMatch = ClassNameRegex().Match(dtoFileContent);
+        Match classNameMatch = ClassNameRegex.Match(dtoFileContent);
 
         if (classNameMatch.Success)
         {
             fileNameWithoutExtension = classNameMatch.Groups[1].Value;
         }
 
-        var dtoFilePath = Path.Combine(options.Value.OutputDirectoryPath, $"{fileNameWithoutExtension}.cs");
+        string dtoFilePath = Path.Combine(options.Value.OutputDirectoryPath, $"{fileNameWithoutExtension}.cs");
         return File.WriteAllTextAsync(dtoFilePath, dtoFileContent);
     }
 
@@ -118,7 +119,4 @@ public partial class CodeGenerationService(TelegramBotApiHttpService telegramBot
 
         return DocumentationEntry.Create(nextNode, representation.ToString());
     }
-
-    [GeneratedRegex(@"class\s+(\w+)")]
-    private static partial Regex ClassNameRegex();
 }
