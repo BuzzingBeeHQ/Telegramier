@@ -1,0 +1,20 @@
+name: Publish Telegramier package
+on:
+  push:
+    branches: [main]
+
+env:
+  DOTNET_NOLOGO: true
+
+jobs:
+  create-nuget:
+    runs-on: docker-runner
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Pack source
+      run: dotnet pack --configuration Release
+
+    - name: Publish packages
+      run: dotnet nuget push ./src/packages/*.nupkg --api-key ${{ secrets.NUGET_TOKEN }} --source ${{ secrets.NUGET_SOURCE_URL }} --skip-duplicate
